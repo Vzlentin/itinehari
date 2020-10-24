@@ -1,4 +1,4 @@
-# itinerari
+# itinehari
 
 `python3 hari.py le peletier metro - bourg la reine rer`
 
