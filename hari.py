@@ -49,10 +49,10 @@ def link(start, end):
     try:
         resp = r.get(CM_BASE, params={"start": startcoord, "end": endcoord, "region_id":"fr-paris"})
         journeys = resp.json()["journeys"]
-        if len(journeys) > 0:
-            iti = display(min(journeys, key= lambda x: x["duration_seconds"]))
-        else:
+        if len(journeys) == 0:
             iti = "Nothing found\n"
+        else:
+            iti = display(min(journeys, key= lambda x: x["duration_seconds"]))
         iti += resp.url.replace("api/7/journeys","directions")
         return iti
 
