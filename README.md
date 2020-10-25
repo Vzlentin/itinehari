@@ -1,6 +1,8 @@
-# itinehari
+# itinehari - WIP
 
-`python3 hari.py le peletier metro - bourg la reine rer`
+`cp hari.py ~/.local/bin/hari`
+
+`hari le peletier metro - bourg la reine rer`
 
 ```
 - Total - 67 min
@@ -15,3 +17,10 @@
 	| 
 	+ Bourg-la-Reine RER 02:35
 ```
+
+# TODO:
+- ETA
+- Chatbot ?
+- Home - School/Work starred itinerary
+- Itinerary planification with schedule
+
