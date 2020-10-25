@@ -21,6 +21,6 @@
 ## TODO
 
 - ETA
-- Chatbot ?
+- Chatbot
 - Home - School/Work starred itinerary
 - Itinerary planification with schedule
