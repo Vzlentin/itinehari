@@ -1,18 +1,17 @@
-#!/usr/bin/python3
-
 import sys
 import requests as r
 from dateutil import parser
+from anytree import Node, RenderTree
 
 COORD_BASE = "https://api-adresse.data.gouv.fr/search"
 CM_BASE = "https://citymapper.com/api/7/journeys"
 
 def usage():
-    print("A - B")
+    return "A - B"
 
 def locate(place):
 
-    resp = r.get(COORD_BASE, params={"q":place.replace(" ","-")})
+    resp = r.get(COORD_BASE, params={"q":place.replace(" ","-"), "lat":48.8534, "lon":2.3488})
     if len(resp.json()["features"]) == 0:
         raise RuntimeError(f"{place} not found")
     else:
@@ -22,23 +21,26 @@ def locate(place):
 def display(journey):
 
     output = ""
+
     d = round(journey["duration_seconds"]/60)
-    output += f"- Total - {d} min\n"
+    eta = parser.parse(journey["legs"][-1]["arrival_time"]).strftime("%H:%M")
+    root = Node(f"- Total: {d} min - ETA: {eta}")
 
     for l in journey["legs"]:
         if l["mode"] == "walk":
             d = round(l["duration_seconds"]/60)
-            output += f"- Walk - {d} min\n"
-
+            child = Node(f"Walk - {d} min", parent=root)
         if l["mode"] == "transit":
             start = l["stops"][0]
             end = l["stops"][-1]
             line = l["routes"][0]["display_name"]
             d = round(end["duration_seconds_to_here"]/60)
-            output += f"- {line} - {d} min\n"
-            output += "\t+ " + start["name"] + parser.parse(l["departure_time"]).strftime(" %H:%M") + "\n"
-            output += "\t| \n"
-            output += "\t+ " + end["name"] + parser.parse(l["arrival_time"]).strftime(" %H:%M") + "\n"
+            child = Node(f"{line} - {d} min", parent=root)
+            sub_start = Node(start["name"] + parser.parse(l["departure_time"]).strftime(" %H:%M"), parent=child)
+            sub_end = Node(end["name"] + parser.parse(l["arrival_time"]).strftime(" %H:%M"), parent=child)
+
+    for pre, fill, node in RenderTree(root):
+        output += f"{pre}{node.name}\n"
     
     return output
 
@@ -53,16 +55,22 @@ def link(start, end):
             iti = "Nothing found\n"
         else:
             iti = display(min(journeys, key= lambda x: x["duration_seconds"]))
-        iti += resp.url.replace("api/7/journeys","directions")
+        iti += resp.url.replace("api/7/journeys","directions") + "\n"
         return iti
 
     except Exception as e:
         return e
 
 if __name__ == "__main__":
-    args = sys.argv[1:]
-    if '-' not in args:
-        usage()
+
+    args = sys.argv
+    if len(args) > 1:
+        args = " ".join(args[1:])
     else:
-        [start, end] = " ".join(args).split(' - ')
-        print(link(start, end))
+        args = sys.stdin.read()
+    if args:
+        if '-' not in args:
+            sys.stdout.write(usage())
+        else:
+            [start, end] = args.split(' - ')
+            sys.stdout.write(link(start, end))
