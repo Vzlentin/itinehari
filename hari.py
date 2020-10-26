@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import sys
 import requests as r
 from dateutil import parser
@@ -7,7 +9,7 @@ COORD_BASE = "https://api-adresse.data.gouv.fr/search"
 CM_BASE = "https://citymapper.com/api/7/journeys"
 
 def usage():
-    return "A - B"
+    return "A - B\n"
 
 def locate(place):
 
@@ -16,26 +18,29 @@ def locate(place):
         raise RuntimeError(f"{place} not found")
     else:
         coords = reversed(resp.json()["features"][0]["geometry"]["coordinates"])
-        return ','.join(str(c) for c in coords)
+        return ','.join([str(c) for c in coords])
 
 def display(journey):
 
     output = ""
-
     d = round(journey["duration_seconds"]/60)
     eta = parser.parse(journey["legs"][-1]["arrival_time"]).strftime("%H:%M")
     root = Node(f"- Total: {d} min - ETA: {eta}")
 
     for l in journey["legs"]:
         if l["mode"] == "walk":
+        
             d = round(l["duration_seconds"]/60)
             child = Node(f"Walk - {d} min", parent=root)
+
         if l["mode"] == "transit":
+            
             start = l["stops"][0]
             end = l["stops"][-1]
-            line = l["routes"][0]["display_name"]
+            way = l["routes"][0]["display_name"]
             d = round(end["duration_seconds_to_here"]/60)
-            child = Node(f"{line} - {d} min", parent=root)
+            
+            child = Node(f"{way} - {d} min", parent=root)
             sub_start = Node(start["name"] + parser.parse(l["departure_time"]).strftime(" %H:%M"), parent=child)
             sub_end = Node(end["name"] + parser.parse(l["arrival_time"]).strftime(" %H:%M"), parent=child)
 
@@ -54,23 +59,24 @@ def link(start, end):
         if len(journeys) == 0:
             iti = "Nothing found\n"
         else:
-            iti = display(min(journeys, key= lambda x: x["duration_seconds"]))
+            best = min(journeys, key= lambda x: x["duration_seconds"])
+            iti = display(best)
         iti += resp.url.replace("api/7/journeys","directions") + "\n"
         return iti
 
     except Exception as e:
-        return e
+        return str(e)
 
 if __name__ == "__main__":
-
-    args = sys.argv
-    if len(args) > 1:
-        args = " ".join(args[1:])
+    if sys.stdin.isatty():
+        args = sys.argv
+        if len(args) > 1:
+            args = " ".join(args[1:])
     else:
         args = sys.stdin.read()
     if args:
         if '-' not in args:
-            sys.stdout.write(usage())
+            sys.stderr.write(usage())
         else:
             [start, end] = args.split(' - ')
             sys.stdout.write(link(start, end))
