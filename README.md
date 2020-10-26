@@ -27,8 +27,8 @@ It also supports standard input/output like
 
 ## TODO
 
-- ETA done
-- standard input/ouput done
-- Itinerary planification with schedule
-- Chatbot
-- Home - School/Work starred itinerary
+[x] ETA
+[x] standard input/ouput
+[ ] Itinerary planification with schedule
+[ ] Chatbot
+[ ] Home - School/Work starred itinerary
