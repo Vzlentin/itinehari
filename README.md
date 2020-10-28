@@ -24,7 +24,7 @@ https://citymapper.com/directions?start=48.871951%2C2.338082&end=48.780114%2C2.3
 
 It also supports standard input/output like:
 
-`echo 12 rue faubourg du temple - 7 rue des templiers | hari`
+`echo 12 rue faubourg du temple - 7 rue des templiers | hari >> itineraries`
 
 ## TODO
 
