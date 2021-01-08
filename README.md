@@ -1,4 +1,4 @@
-# itinehari - WIP
+# itinehari
 
 `cp hari.py ~/.local/bin/hari`
 
@@ -25,11 +25,3 @@ https://citymapper.com/directions?start=48.871951%2C2.338082&end=48.780114%2C2.3
 It also supports standard input/output like:
 
 `echo 12 rue faubourg du temple - 7 rue des templiers | hari >> itineraries`
-
-## TODO
-
-- [x] ETA
-- [x] standard input/ouput
-- [ ] Itinerary planification with schedule
-- [ ] Chatbot
-- [ ] Home - School/Work starred itinerary
