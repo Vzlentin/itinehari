@@ -1,5 +1,9 @@
 # itinehari
 
+Python cli itinerary tool based on citymapper api
+
+## Usage
+
 ```bash
 $ hari le peletier - bourg la reine
 ```
@@ -21,6 +25,8 @@ $ hari le peletier - bourg la reine
 └── Walk - 6 min
 https://citymapper.com/directions?start=48.871951%2C2.338082&end=48.780114%2C2.316521&region_id=fr-paris
 ```
+
+## Note
 
 It also supports standard input/output like:
 
