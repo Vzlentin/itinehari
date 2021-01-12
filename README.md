@@ -1,8 +1,8 @@
 # itinehari
 
-`cp hari.py ~/.local/bin/hari`
-
-`hari le peletier - bourg la reine`
+```bash
+$ hari le peletier - bourg la reine
+```
 
 ```text
 - Total: 39 min - ETA: 11:44
